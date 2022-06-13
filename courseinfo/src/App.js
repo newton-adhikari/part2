@@ -17,10 +17,7 @@ const Content = props => {
 const Total = ({total}) => <strong>total of {total} exercises</strong>
 
 const Course = ({course}) => {
-  let totalExe = 0;
-  for(let i=0; i<course.parts.length; i++) {
-    totalExe += course.parts[i].exercises;
-  }
+  let totalExe = course.parts.reduce((n, c) => n+=c.exercises, 0);
 
   return (
     <>
