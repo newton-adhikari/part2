@@ -20,10 +20,14 @@ function App() {
   let displayed = search
     ? searchedCountries.length >= 10 
       ? "too many matches found, specify another filter"
-      : searchedCountries.map(c => <p key={c.name}>{c.name}</p>)
+      : searchedCountries.map(c => <p key={c.name}>
+        {c.name} <button
+          onClick={() => setSearch(c.name)}
+        >show</button>
+      </p>)
     : ""
 
-  if(Array.isArray(displayed) && displayed.length === 1) {
+  if(Array.isArray(displayed) && searchedCountries.length === 1) {
     const {name, capital, area, population, languages, flag} = searchedCountries[0];
     
     displayed = (
@@ -38,7 +42,7 @@ function App() {
         </ul>
         <img width="250px" src={flag} alt={name} />
       </div>
-    )
+    );
   }
 
   return (
