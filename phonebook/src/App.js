@@ -3,7 +3,7 @@ import Filter from "./components/Filter/Filter";
 import PersonForm from './components/PersonForm/PersonForm';
 import Persons from "./components/Persons/Persons";
 import axios from "axios";
-import { getAll, createEntry, updateEntry } from "./services/phonebook";
+import { getAll, createEntry, updateEntry, deleteEntry } from "./services/phonebook";
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -31,11 +31,21 @@ const App = () => {
     const person = {name: newName, number: newNumber};
     createEntry(person)
       .then(data => {
-        console.log(data);
         setPersons([...persons, data]);
       })
     setNewName("");
     setNewNumber("");
+  }
+
+  const deleteHandler = id => {
+    const person = persons.find(p => p.id === id);
+    const confirm = window.confirm(`delete ${person.name}`);
+    if(confirm) {
+      deleteEntry(id)
+      .then(res => {
+        setPersons(persons.filter(p => p.id !== id));
+      })
+    }
   }
 
   const filtered = persons.filter(p => p.name.toLowerCase().includes(searched.toLowerCase()));
@@ -53,7 +63,7 @@ const App = () => {
         changeHandler={changeHandler}
       />
       <h2>Numbers</h2>
-      <Persons filtered={filtered} />
+      <Persons filtered={filtered} deleteHandler={deleteHandler} />
     </div>
   )
 }

@@ -19,4 +19,10 @@ const updateEntry = (id, data) => {
         .catch(err => console.log(err));
 }
 
-export { getAll, createEntry, updateEntry };
+const deleteEntry = (id) => {
+    return axios.delete(`${baseURL}persons/${id}`)
+        .then(res => res.data)
+        .catch(err => console.log(err));
+}
+
+export { getAll, createEntry, updateEntry, deleteEntry };
