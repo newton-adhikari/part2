@@ -3,6 +3,7 @@ import Filter from "./components/Filter/Filter";
 import PersonForm from './components/PersonForm/PersonForm';
 import Persons from "./components/Persons/Persons";
 import axios from "axios";
+import { getAll, createEntry, updateEntry } from "./services/phonebook";
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,9 +12,8 @@ const App = () => {
   const [searched, setSearched] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons")
-      .then(res => setPersons(res.data))
-      .catch(err => console.log(err));
+    getAll()
+      .then(res => setPersons(res))
   }, [])
 
   const changeHandler = event => {
@@ -29,10 +29,10 @@ const App = () => {
     if(exists) return alert(`${newName} already exists in phonebook`);
 
     const person = {name: newName, number: newNumber};
-    axios.post("http://localhost:3001/persons", person)
-      .then(res => {
-        console.log(res.data);
-        setPersons([...persons, res.data]);
+    createEntry(person)
+      .then(data => {
+        console.log(data);
+        setPersons([...persons, data]);
       })
     setNewName("");
     setNewNumber("");
