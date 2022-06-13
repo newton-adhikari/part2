@@ -13,6 +13,10 @@ const App = () => {
   const nameSubmitHandler = event => {
     event.preventDefault();
 
+    const person = {name: newName};
+    const exists = persons.findIndex(p => p.name === newName) !== -1;
+
+    if(exists) return alert(`${newName} already exists in phonebook`); 
     setPersons(persons.concat({name: newName}));
     setNewName("");
   }
