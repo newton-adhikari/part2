@@ -24,10 +24,16 @@ const App = () => {
 
   const nameSubmitHandler = event => {
     event.preventDefault();
-    const exists = persons.findIndex(p => p.name === newName) !== -1;
+    const exists = persons.find(p => p.name === newName);
 
-    if(exists) return alert(`${newName} already exists in phonebook`);
-
+    if(exists) {
+      const confirm = window.confirm(`${newName} already exists in phonebook replace old number with new one??`);
+      updateEntry(exists.id, {name: newName, number: newNumber})
+        .then(res => {
+          setPersons(persons.map(p => p.name === newName ? res : p))
+        })
+      return;
+    }
     const person = {name: newName, number: newNumber};
     createEntry(person)
       .then(data => {
