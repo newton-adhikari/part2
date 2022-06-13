@@ -28,7 +28,12 @@ const App = () => {
 
     if(exists) return alert(`${newName} already exists in phonebook`);
 
-    setPersons(persons.concat({name: newName, number: newNumber}));
+    const person = {name: newName, number: newNumber};
+    axios.post("http://localhost:3001/persons", person)
+      .then(res => {
+        console.log(res.data);
+        setPersons([...persons, res.data]);
+      })
     setNewName("");
     setNewNumber("");
   }
