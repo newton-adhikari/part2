@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [searched, setSearched] = useState("");
   const [message, setMessage] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     getAll()
@@ -36,6 +37,14 @@ const App = () => {
           setPersons(persons.map(p => p.name === newName ? res : p));
           setNewName("");
           setNewNumber("");
+        })
+        .catch(err => {
+          setMessage(`${newName} has already been removed from server`)
+          setError(true);
+          setTimeout(() => {
+            setMessage(null);
+            setError(false);
+          }, 3000)
         })
       }
       return;
@@ -69,7 +78,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification error={error} message={message} />
       <Filter 
         searched={searched}
         changeHandler={changeHandler}

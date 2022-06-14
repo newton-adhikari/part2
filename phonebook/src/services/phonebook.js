@@ -16,7 +16,6 @@ const createEntry = (data) => {
 const updateEntry = (id, data) => {
     return axios.put(`${baseURL}persons/${id}`, data)
         .then(res => res.data)
-        .catch(err => console.log(err));
 }
 
 const deleteEntry = (id) => {

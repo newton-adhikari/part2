@@ -1,7 +1,8 @@
-const Notification = ({message}) => {
+const Notification = ({message, error}) => {
     if(message === null) return null;
+    let style = error ? "error" : "success";
     return (
-        <div className="error">
+        <div className={style}>
             {message}
         </div>
     )
