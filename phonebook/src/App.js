@@ -2,14 +2,16 @@ import { useState, useEffect } from 'react'
 import Filter from "./components/Filter/Filter";
 import PersonForm from './components/PersonForm/PersonForm';
 import Persons from "./components/Persons/Persons";
-import axios from "axios";
+import Notification from "./components/Notification/Notification";
 import { getAll, createEntry, updateEntry, deleteEntry } from "./services/phonebook";
+import "./App.css";
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('');
   const [searched, setSearched] = useState("");
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     getAll()
@@ -24,20 +26,29 @@ const App = () => {
 
   const nameSubmitHandler = event => {
     event.preventDefault();
-    const exists = persons.find(p => p.name === newName);
+    const existingPerson = persons.find(p => p.name === newName);
 
-    if(exists) {
+    if(existingPerson) {
       const confirm = window.confirm(`${newName} already exists in phonebook replace old number with new one??`);
-      updateEntry(exists.id, {name: newName, number: newNumber})
+      if(confirm) {
+        updateEntry(existingPerson.id, {name: newName, number: newNumber})
         .then(res => {
-          setPersons(persons.map(p => p.name === newName ? res : p))
+          setPersons(persons.map(p => p.name === newName ? res : p));
+          setNewName("");
+          setNewNumber("");
         })
+      }
       return;
     }
     const person = {name: newName, number: newNumber};
     createEntry(person)
       .then(data => {
         setPersons([...persons, data]);
+        setMessage(`added ${newName}`);
+
+        setTimeout(() => {
+          setMessage(null);
+        }, 3000)
       })
     setNewName("");
     setNewNumber("");
@@ -58,6 +69,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter 
         searched={searched}
         changeHandler={changeHandler}
